@@ -7,9 +7,31 @@ import nltk
 import asyncio
 import more_itertools
 
-# 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
+# block size must be set such that the tokens used for the book summary is less than the maximum tokens allowed for the model
+def estimate_block_and_tokens(text, model):
+    
+    text_tokens = len(nltk.word_tokenize(text))
+    if model == 'davinci':
+        model_tokens = 3000
+    elif model == 'gpt-4':
+        model_tokens = 7000
+        
+    # block size for davinci should be such that the final summary is around 3000 to 3500 tokens (4k max so we leave 1000 to 500 for prompt)
+    # block size for gpt-4 should be such that the final summary is around 7000 to 7500 tokens (8k max so we leave 1000 to 500 for prompt)
+    # the final summary is the sum of the tokens used for each summarized block. This is influenced by the max tokens, default set to 300.
+    ## So, if the max tokens is set to 300, then the final summary will be 300 * number of blocks.
+    ### In other words: max tokens = model tokens / number of blocks
+    ## Therefore, the block size should be set such that the number of blocks is around 10.
+    ### In other words, block size = text tokens / max_tokens
+    
+    max_tokens = (model_tokens / 10)
+    block_size = int(text_tokens / max_tokens)
+    
+    return (block_size, max_tokens)
 
-def get_book_blocks(book_content, block_size=512):
+def get_book_blocks(book_content):
+    
+    block_size, _ = estimate_block_and_tokens(book_content)
     
     tokenized_book = nltk.word_tokenize(book_content)
     book_blocks = [" ".join(tokenized_book[i:i+block_size]) for i in range(0, len(tokenized_book), block_size)]
@@ -49,17 +71,18 @@ def block_token_count(book_blocks):
 
 async def summarize_block(api_key,
                           block,
-                          max_tokens=200,
-                          temperature=0.5,
+                          temperature=0.5, # low temperature to keep the features of the original text
                           top_p=1.0,
                           frequency_penalty=0.0,
                           presence_penalty=0.0):
     
     openai.api_key = api_key
     
+    _, max_tokens = estimate_block_and_tokens(block)
+    
     completions = openai.Completion.create(
       engine="text-davinci-003",
-      prompt=f"Summarize the following chunk of a book and keep the essence of the author. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}",
+      prompt=f"Summarize the following chunk of a scientific research work and focus on keeping the essence and style of the author. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}",
       max_tokens=max_tokens,
       temperature=temperature,
       top_p=top_p,
@@ -73,13 +96,8 @@ async def summarize_block(api_key,
     
     return (response, tokens_used)
 
-async def summarize_book(book_content, 
-                   block_size=2000, 
-                   max_tokens=200, 
-                   temperature=0.5, 
-                   top_p=1.0, 
-                   frequency_penalty=0.0, 
-                   presence_penalty=0.0):
+async def summarize_book(book_content,
+                         api_key):
     
     book_blocks = get_book_blocks(book_content)
     cleaned_book_blocks = clean_book_blocks(book_blocks)
@@ -88,22 +106,25 @@ async def summarize_book(book_content,
     # Split the cleaned_book_blocks into batches of 5 blocks each
     batches = more_itertools.chunked(cleaned_book_blocks, 5)
     
+    # Summarize each batch of blocks asyncrhonously for faster processing
     for batch in batches:
-        tasks = [asyncio.ensure_future(summarize_block(block)[0]) for block in batch]
+        tasks = [asyncio.ensure_future(summarize_block(api_key, block)[0]) for block in batch]
         responses = await asyncio.gather(*tasks)
         
         for response in responses:
             book_summary += response
     
+    # Final summary is the concatenation of all the block summaries
     return book_summary
 
 
 def chat_with_author(api_key,
                      model,
-                     author_bio, 
+                     author_bio,
+                     workTitle,
                      book_summary,
                      query,
-                     max_tokens=150, 
+                     max_tokens=100, 
                      temperature=0.5):
     
     openai.api_key = api_key
@@ -111,14 +132,9 @@ def chat_with_author(api_key,
     sys_prompt = f"You are a revered author and researcher. According to your biography, you are {author_bio}." \
                 + "You are now being interviewed by followers and fans of your work. Reply in a way that is consistent with your biography, personality, and writing style." 
     
-    prompt = f"Based on your biography and your book/paper summary {book_summary}" \
-       + f"Adopt the personality of the author and be capable of answering questions about the book. " \
-       + f"For example, if the question is 'What is the name of the book?', the answer should be the name of the book. " \
-       + f"Another example is 'What is the name of the author?', the answer should be the name of the author. " \
-       + f"Another example is 'What is the book about?', the answer should be the summary of the book. " \
-       + f"Finally, other examples can be more specific about the book's content. " \
-       + "The important thing is to converse as if you are the author of the book. " \
-       + "[Question]" + f"{query}" + "[Answer]" + " "
+    prompt = f"Based on your biography and the summary {book_summary} of your work titled {workTitle}" \
+        + "converse as if you are the author of the book. " \
+        + "[Question]" + f"{query}" + "[Answer]" + " "
        
     if model == "davinci":
         completions = openai.Completion.create(engine="text-davinci-003", 
