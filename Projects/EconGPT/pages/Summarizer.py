@@ -10,8 +10,10 @@ st.sidebar.title("Inputs")
 api_key = st.sidebar.text_input(" ", "OpenAI API Key")
 
 work_file = st.file_uploader("Upload text file of book/paper", type="txt")
-work_string = StringIO(work_file.getvalue().decode("utf-8"))
-work = work_string.read()
+
+if work_file:
+    work_string = StringIO(work_file.getvalue().decode("utf-8"))
+    work = work_string.read()
 
 if st.button("Summarize") and api_key:
     work_summary = summarize_book(work, api_key)
