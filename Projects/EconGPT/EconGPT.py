@@ -25,14 +25,14 @@ max_tokens = st.sidebar.slider("Max tokens", 0, 800, 350, step=50)
 
 # getting the correct files for given author and work should be done automatically. Look into file processing and regex to match with file names.
 st.sidebar.subheader("Author")
-author_file = st.file_uploader("Upload text file to inform author's biography", type="txt")
+author_file = st.sidebar.file_uploader("Upload text file to inform author's biography", type="txt")
 
 if author_file:
     author_string = StringIO(author_file.getvalue().decode("utf-8"))
     author = author_string.read()
 
 st.sidebar.subheader("Written work")
-work_file = st.file_uploader("Upload text file of author's written work", type="txt")
+work_file = st.sidebar.file_uploader("Upload text file of author's written work", type="txt")
 
 if work_file:
     work_string = StringIO(work_file.getvalue().decode("utf-8"))
