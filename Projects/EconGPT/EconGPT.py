@@ -58,7 +58,7 @@ if api_key and author and work and query:
                 
             st.write(f"{author}'s response:")
             completion = chat_with_author(api_key, model, 
-                                          adam_bio, work, work_summary, 
+                                          author, work, work_summary, 
                                           query, max_tokens, temperature)
             
             response = completion[0]
