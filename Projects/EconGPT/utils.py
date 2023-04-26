@@ -8,7 +8,7 @@ import asyncio
 import more_itertools
 
 # block size must be set such that the tokens used for the book summary is less than the maximum tokens allowed for the model
-def estimate_block_and_tokens(text, model):
+def estimate_block_and_tokens(text, model='davinci'):
     
     text_tokens = len(nltk.word_tokenize(text))
     if model == 'davinci':
@@ -83,7 +83,7 @@ async def summarize_block(api_key,
     completions = openai.Completion.create(
       engine="text-davinci-003",
       prompt=f"Summarize the following chunk of a scientific research work and focus on keeping the essence and style of the author. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}",
-      max_tokens=max_tokens,
+      max_tokens=int(max_tokens),
       temperature=temperature,
       top_p=top_p,
       frequency_penalty=frequency_penalty,
@@ -110,10 +110,13 @@ async def summarize_book(book_content,
     
     # Summarize each batch of blocks asyncrhonously for faster processing
     for batch in batches:
-        tasks = [asyncio.ensure_future(summarize_block(api_key, block)[0]) for block in batch]
-        responses = await asyncio.gather(*tasks)
+         # Create a list of tasks using summarize_block without indexing
+        tasks = [asyncio.ensure_future(summarize_block(api_key, block)) for block in batch]
+        # Await the completion of all tasks and store the results
+        results = await asyncio.gather(*tasks)
         
-        for response in responses:
+        # Extract the summaries from the results and concatenate
+        for response, _ in results:
             book_summary += response
     
     # Final summary is the concatenation of all the block summaries
