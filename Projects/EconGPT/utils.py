@@ -99,6 +99,8 @@ async def summarize_block(api_key,
 async def summarize_book(book_content,
                          api_key):
     
+    openai.api_key = api_key
+    
     book_blocks = get_book_blocks(book_content)
     cleaned_book_blocks = clean_book_blocks(book_blocks)
     book_summary = ""
