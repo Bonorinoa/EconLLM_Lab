@@ -27,14 +27,16 @@ max_tokens = st.sidebar.slider("Max tokens", 0, 800, 350, step=50)
 st.sidebar.subheader("Author")
 author_file = st.file_uploader("Upload text file to inform author's biography", type="txt")
 
-author_string = StringIO(author_file.getvalue().decode("utf-8"))
-author = author_string.read()
+if author_file:
+    author_string = StringIO(author_file.getvalue().decode("utf-8"))
+    author = author_string.read()
 
 st.sidebar.subheader("Written work")
 work_file = st.file_uploader("Upload text file of author's written work", type="txt")
 
-work_string = StringIO(work_file.getvalue().decode("utf-8"))
-work = work_string.read()
+if work_file:
+    work_string = StringIO(work_file.getvalue().decode("utf-8"))
+    work = work_string.read()
 
 st.sidebar.subheader("Ask author a question about their work")
 query = st.sidebar.text_input(" ", "Insert question")
