@@ -16,6 +16,6 @@ work = work_string.read()
 if st.button("Summarize") and api_key:
     work_summary = summarize_book(work, api_key)
 
-st.subheader("Summary")
-st.write("Here is the summary generated. Copy the text and save it as a text file. You can use this summary text file as an input for the model in the next page.")
-st.write(work_summary)
+    st.subheader("Summary")
+    st.write("Here is the summary generated. Copy the text and save it as a text file. You can use this summary text file as an input for the model in the next page.")
+    st.write(work_summary)
