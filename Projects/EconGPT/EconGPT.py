@@ -48,8 +48,8 @@ if api_key and author and work and query:
             
             if work not in st.session_state['summarized']:
                 work_summary = summarize_book(work, api_key)
-                st.session_state['summarized'].append(work)
-                st.session_state['summaries'].append({work: work_summary})
+                st.session_state['summarized'].append(work_file.name)
+                st.session_state['summaries'].append({work_file.name: work_summary})
                 time.sleep(1)
                 st.success("Document summarized!")
                 st.balloons()
