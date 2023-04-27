@@ -78,11 +78,11 @@ async def summarize_block(api_key,
     
     openai.api_key = api_key
     
-    _, max_tokens = estimate_block_and_tokens(block)
+    _, max_tokens = estimate_block_and_tokens(block, model='davinci')
     
     completions = openai.Completion.create(
       engine="text-davinci-003",
-      prompt=f"Summarize the following chunk of a scientific research work and focus on keeping the essence and style of the author. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}",
+      prompt=f"Summarize the following chunk of a scientific research work and focus on keeping the essence and style of the author. Also, make sure to identify major historical events and dates in the text. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}",
       max_tokens=int(max_tokens),
       temperature=temperature,
       top_p=top_p,
@@ -111,7 +111,7 @@ async def summarize_book(book_content,
     # Summarize each batch of blocks asyncrhonously for faster processing
     for batch in batches:
          # Create a list of tasks using summarize_block without indexing
-        tasks = [asyncio.ensure_future(summarize_block(api_key, block)) for block in batch]
+        tasks = [await asyncio.ensure_future(summarize_block(api_key, block)) for block in batch]
         # Await the completion of all tasks and store the results
         results = await asyncio.gather(*tasks)
         
