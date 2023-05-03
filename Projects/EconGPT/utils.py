@@ -4,13 +4,16 @@ import json
 import re
 import os
 import nltk
-import asyncio
+#import asyncio
 import more_itertools
+import time
 
 # block size must be set such that the tokens used for the book summary is less than the maximum tokens allowed for the model
 def estimate_block_and_tokens(text, model='davinci'):
     
     text_tokens = len(nltk.word_tokenize(text))
+    print(f"Number of tokens in text: {text_tokens}")
+    # 1k tokens less than the max tokens allowed for the model to leave room for the prompt/query
     if model == 'davinci':
         model_tokens = 3000
     elif model == 'gpt-4':
@@ -24,8 +27,11 @@ def estimate_block_and_tokens(text, model='davinci'):
     ## Therefore, the block size should be set such that the number of blocks is around 10.
     ### In other words, block size = text tokens / max_tokens
     
-    max_tokens = (model_tokens / 10)
+    max_tokens = int(model_tokens / 10)
     block_size = int(text_tokens / max_tokens)
+    
+    # TMS has 133280 tokens. 
+    # Block size for davinci is then 133280 / 300 = 444.4 and for gpt-4 is 133280 / 700 = 190.4
     
     return (block_size, max_tokens)
 
@@ -69,35 +75,10 @@ def block_token_count(book_blocks):
     
     return token_size
 
-async def summarize_block(api_key,
-                          block,
-                          temperature=0.5, # low temperature to keep the features of the original text
-                          top_p=1.0,
-                          frequency_penalty=0.0,
-                          presence_penalty=0.0):
-    
-    openai.api_key = api_key
-    
-    _, max_tokens = estimate_block_and_tokens(block, model='davinci')
-    
-    completions = openai.Completion.create(
-      engine="text-davinci-003",
-      prompt=f"Summarize the following chunk of a scientific research work and focus on keeping the essence and style of the author. Also, make sure to identify major historical events and dates in the text. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}",
-      max_tokens=int(max_tokens),
-      temperature=temperature,
-      top_p=top_p,
-      frequency_penalty=frequency_penalty,
-      presence_penalty=presence_penalty,
-      stop=["\n", " #"]
-    )
-    
-    response = completions.choices[0].text
-    tokens_used = len(response.split())
-    
-    return (response, tokens_used)
-
-async def summarize_book(book_content,
-                         api_key):
+def summarize_book(book_content,
+                    api_key,
+                    temperature=0.5, # low temperature to keep the features of the original text
+                    model='gpt-4'):
     
     openai.api_key = api_key
     
@@ -106,18 +87,41 @@ async def summarize_book(book_content,
     book_summary = ""
     
     # Split the cleaned_book_blocks into batches of 5 blocks each
-    batches = more_itertools.chunked(cleaned_book_blocks, 5)
+    #batches = more_itertools.chunked(cleaned_book_blocks, 5)
     
-    # Summarize each batch of blocks asyncrhonously for faster processing
-    for batch in batches:
-         # Create a list of tasks using summarize_block without indexing
-        tasks = [await asyncio.ensure_future(summarize_block(api_key, block)) for block in batch]
-        # Await the completion of all tasks and store the results
-        results = await asyncio.gather(*tasks)
+    sys_prompt = "You are helpful assistant that efficiently summarizes and extracts critical ideas from scientific research work."
+
+    # Summarize each cleaned_book_block
+    total_tokens = 0
+    n_summ = 0
+    for block in cleaned_book_blocks:
+        #time.sleep(1)
         
-        # Extract the summaries from the results and concatenate
-        for response, _ in results:
-            book_summary += response
+        prompt = "Summarize the following chunk of a scientific research work and focus on keeping the essence and style of the author. " \
+            + f"Also, make sure to identify major historical events and dates in the text. Keep in mind that there are multiple chunks and they are being fed sequentially: {block}"
+            
+        _, max_tokens = estimate_block_and_tokens(block, model=model)
+
+        # gpt-3.5-turbo is cheaper and faster than davinci (both up to 4,096 tokens). Also better for summarization I think.
+        completions = openai.ChatCompletion.create(model='gpt-3.5-turbo',
+                                                   messages=[{'role':'system', 'content':sys_prompt},
+                                                             {'role':'user', 'content':prompt}],
+                                                   max_tokens=max_tokens,
+                                                   temperature=temperature)
+        
+        response = completions.choices[0].message.content
+        tokens_used = len(response.split())
+        n_summ += 1
+        
+        book_summary += response
+        total_tokens += tokens_used
+        
+        print(f" There are {len(cleaned_book_blocks) - n_summ} blocks left to summarize.")
+        print(f"{total_tokens} tokens used so far.")
+
+        if total_tokens >= max_tokens*10:
+            print(f"The maximum number of tokens for {model} model has been reached. Stopping summarization.")
+            break
     
     # Final summary is the concatenation of all the block summaries
     return book_summary
@@ -126,7 +130,6 @@ async def summarize_book(book_content,
 def chat_with_author(api_key,
                      model,
                      author_bio,
-                     workTitle,
                      book_summary,
                      query,
                      max_tokens=100, 
@@ -137,7 +140,7 @@ def chat_with_author(api_key,
     sys_prompt = f"You are a revered author and researcher. According to your biography, you are {author_bio}." \
                 + "You are now being interviewed by followers and fans of your work. Reply in a way that is consistent with your biography, personality, and writing style." 
     
-    prompt = f"Based on your biography and the summary {book_summary} of your work titled {workTitle}" \
+    prompt = f"Based on your biography and the summary {book_summary} of your work." \
         + "converse as if you are the author of the book. " \
         + "[Question]" + f"{query}" + "[Answer]" + " "
        
