@@ -1,0 +1,12 @@
+TASKS
+
+Project 1
+
+Replicating 15 small scale societies behavioral traits with LLMs. 
+- Obtain eHRAF cultures data programmatically.
+- Build Langchain Agent that collects relevant information about a given society.
+- Engineer prompt using eHRAF data and the information collected by the Agent.
+   - System prompt should use the information to describe, in detail, the relevant personality/behavioral traits the LLM must adopt.
+   - Instruction prompt (let's call it experiment prompt) should contain the action we want it to take. I think these should be the experiments, but it may be smart to think of a template to help with replicability. 
+   - The full prompt running an experiment is the concatenation of the two prompts.
+-  We must create a new google colab to work on the code for the project. Make sure to keep it well documented and clean. We use a DRY (Dont Repeat Yourself) style to improve clarity of the code.
