@@ -15,3 +15,8 @@ Conversation with Emilio June 30:
    - Data: what we use, etc. explain this https://ehrafworldcultures.yale.edu/
    - Prompts: 1. Profile of the 'decision maker' (we may have to check each of the 15 small societies samples to mirror them, if we find it to be too cumbersome, we would need to start with "key" societies (e.g. Ache, Hudzu, Tsimane (Kaplan at Chapman)).
    - Prompt 2: Tasks. We start with the endowment effect (see supporting literature for motivation). Next, one shot ultimatum Game (contingency plans to play). Risk attitudes and time preferences (we could use tools that people have developed for illiterate people and for playing in the field).
+Conversation on July 12. 
+   => Monica write prompts for experiments + data sources
+   => Augusto finish the code
+   => Emilio Practice langchain + find data
+   Next week we will have a draft of what we are doing
