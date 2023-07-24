@@ -2,6 +2,7 @@
 The following illustrates the reasoning of the LangChain Agent employed for building the profile of a given culture (The Hazda tribe in this example).
 
 > Entering new AgentExecutor chain...
+
  Yes.
 Follow up: What is the lifestyle of the Hazda tribe?
 Intermediate answer: Northern Tanzania is home to the Hadzabe, one of the last remaining hunter-gatherer tribes on Earth. Known for shunning material possessions and social hierarchy, the Hadza roam as needed to find game, tubers and wild berries. Hunter-gatherer societies understand that their survival depends on natural resources.
