@@ -1,13 +1,13 @@
 ## SelfAskWithSearch Agent chain of thought
 The following illustrates the reasoning of the LangChain Agent employed for building the profile of a given culture (The Hazda tribe in this example) and relevant factors.
 
-% prompt inputs for search
+*prompt inputs for search*
 
 tribe_to_search = "The Hazda"
 
 relevant_factors = ["lifestyle," "average age", "culture", "economic system", "political ideologies present", "values"]
 
-% Generate persona based on profifle and system prompt
+*Generate persona based on profifle and system prompt*
 
 prompt_search = f"Please construct a comprehensive 400-word profile on the {tribe_to_search} tribe. " \
         + f" The profile must cover, amongst other, the following relevant factors {relevant_factors} ."
