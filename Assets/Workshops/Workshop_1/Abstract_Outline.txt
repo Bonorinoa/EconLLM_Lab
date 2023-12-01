@@ -1,0 +1,63 @@
+Workshop 1: Foundational Models, LLMs, and Prompt Engineering Methods
+
+In this half-day workshop, we plan to cover foundational models (FMs), with a special focus on LLMs, and prompt engineering. We will begin by offering an in-depth overview of the landscape of currently available LLMs, demystifying the distinctions between open-source and closed-source options. Participants will gain insights into the core components of these foundational models, enhancing their understanding of these powerful tools for natural language processing, and we will also touch upon alternative approaches to FM in the AI field like symbolic AI. 
+
+As we progress, we will transition to the heart of practical application—prompt engineering. Attendees will learn how to craft effective prompts that unlock the full potential of LLMs for their research and academic pursuits. By the end of this workshop, you will be well-prepared to navigate the world of foundational models, make informed decisions regarding LLM selection, and master the art of prompt engineering, empowering you to leverage these technologies to their fullest extent in your work. 
+
+DESCRIPTION
+
+Workshop Title:
+"Unlocking the Potential of Large Language Models in Academia and Research"
+
+Duration:
+2-3 hours
+
+Target Audience:
+Students, Academics, and Researchers of various fields with a common interest in understanding how to use LLMs in education, scientific research, and increasing productivity. 
+
+OUTLINE
+
+I. Introduction (15 minutes)
+Welcome and Overview of the Workshop
+Icebreaker: Expectations and Experiences with AI
+Setting the Stage: The Role of LLMs in Modern Research and Education
+
+II. The World of Language Models (30 minutes)
+A Brief History of AI: From Turing to Today
+Understanding LLMs: What They Are and Why They Matter
+The Landscape of LLMs: GPT, BERT, and Others
+Video Snapshot: AI in Everyday Life
+
+III. LLM Architectures Simplified (30 minutes)
+Breaking Down the Jargon: What is a Transformer?
+OpenAI's GPT Series: A Non-Technical Overview
+Exploring Huggingface: What Open-Source Means for You
+Comparing Models: What to Use and When
+
+IV. Coffee Break and Networking (10 minutes)
+
+V. Beyond the Code: Alternative AI (20 minutes)
+Symbolic AI: The Logic-Based Cousin
+Combining Forces: When Old Meets New in AI
+Real-World Examples: AI Approaches in Various Fields
+
+VI. The Art of Prompt Engineering (45 minutes)
+The Power of a Good Prompt: Introduction and Examples
+Interactive Workshop: Crafting and Refining Prompts
+Group Activity: Prompt Engineering Scenarios
+
+VII. Using LLMs with Minimal Coding (30 minutes)
+Interfacing with LLMs: APIs and User Interfaces
+A Walkthrough of Tools: From Setup to Execution
+Demonstration: Integrating LLMs Without Heavy Coding
+Resources and Tutorials for Non-Coders
+
+VIII. Q&A and Open Discussion (20 minutes)
+Addressing Questions from the Audience
+Ethical and Social Implications of LLMs
+Sharing Insights and Ideas
+
+IX. Closing the Workshop (10 minutes)
+Recap of Key Points
+Feedback Collection
+Information on Continued Learning and Support

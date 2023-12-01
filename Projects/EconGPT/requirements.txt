@@ -1,4 +1,0 @@
-streamlit
-openai
-nltk
-more_itertools
