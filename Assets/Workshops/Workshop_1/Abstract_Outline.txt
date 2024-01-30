@@ -1,11 +1,5 @@
 Workshop 1: Foundational Models, LLMs, and Prompt Engineering Methods
 
-In this half-day workshop, we plan to cover foundational models (FMs), with a special focus on LLMs, and prompt engineering. We will begin by offering an in-depth overview of the landscape of currently available LLMs, demystifying the distinctions between open-source and closed-source options. Participants will gain insights into the core components of these foundational models, enhancing their understanding of these powerful tools for natural language processing, and we will also touch upon alternative approaches to FM in the AI field like symbolic AI. 
-
-As we progress, we will transition to the heart of practical application—prompt engineering. Attendees will learn how to craft effective prompts that unlock the full potential of LLMs for their research and academic pursuits. By the end of this workshop, you will be well-prepared to navigate the world of foundational models, make informed decisions regarding LLM selection, and master the art of prompt engineering, empowering you to leverage these technologies to their fullest extent in your work. 
-
-DESCRIPTION
-
 Workshop Title:
 "Unlocking the Potential of Large Language Models in Academia and Research"
 
@@ -14,6 +8,16 @@ Duration:
 
 Target Audience:
 Students, Academics, and Researchers of various fields with a common interest in understanding how to use LLMs in education, scientific research, and increasing productivity. 
+
+Prerequisites:
+Prior experience interacting with a chat LLM (e.g., ChatGPT, Anthropic, Copilot, or BARD) through their user interfaces.
+Basic understanding of programming concepts and the Python language preferred to follow along with the hands-on tutorials. 
+
+DESCRIPTION:
+In this half-day workshop, we plan to cover foundational models (FMs), with a special focus on LLMs, and prompt engineering. We will begin by offering an overview of the landscape of currently available LLMs, demystifying the distinctions between open-source and closed-source options. During the first half of the workshop, participants will gain insights into approaches to AI development, the technological evolution that led to foundational models, the core components of LLMs, and the inherent limitations of these architectures. Plus we will have some fun discussing what even is intelligence, your experience using chat LLMs, and prompting as a new programming paradigm.
+
+As we progress, we will transition to the heart of practical application—prompt engineering. Attendees will learn techniques to craft effective prompts that unlock the full potential of LLMs for their research and academic pursuits. These include one-shot, few-shot, chain-of-thought, ReAct, and RAG. By the end of this workshop you will be well-prepared to navigate the world of foundational models, apply advanced prompt techniques, and deploy a custom RAG-based application with Python that you can leverage in your work.
+
 
 OUTLINE
 
