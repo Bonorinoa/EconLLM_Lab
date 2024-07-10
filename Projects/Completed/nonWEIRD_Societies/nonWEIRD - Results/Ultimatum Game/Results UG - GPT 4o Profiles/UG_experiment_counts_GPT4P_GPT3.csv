@@ -1,0 +1,12 @@
+Offer Percentage,Proposer Accept Count,Proposer Reject Count,Proposer Ambiguous Count,Responder Accept Count,Responder Reject Count,Responder Ambiguous Count
+0,1,99,0,0,100,0
+1,1,99,0,0,100,0
+2,10,90,0,1,99,0
+3,19,81,0,1,99,0
+4,30,70,0,3,97,0
+5,45,55,0,35,65,0
+6,50,50,0,43,57,0
+7,38,62,0,34,66,0
+8,21,79,0,44,56,0
+9,7,93,0,34,66,0
+10,1,99,0,25,75,0
